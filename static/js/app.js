@@ -10,14 +10,24 @@ d3.json("./samples.json").then(function(data){
     }
 });
 
+// create inital page
+dataAndrestyle(940);
+
+
 // identifying the id inside the dropdown list and updating graph and information
 function optionChanged(updateID){
+    dataAndrestyle(updateID);
+}
+
+
+// function for creating all the graphs in the HTML page
+function dataAndrestyle(ID){
 
     d3.json("./samples.json").then(function(data){
         let metaData = []; // create an empty array for storing the select id metadata
         for (let i = 0; i < data.metadata.length; i++) {
             // searching the selected dataset (from metadata)
-            if (updateID == data.metadata[i].id){
+            if (ID == data.metadata[i].id){
                 // storing the dataset
                 metaData = data.metadata[i];
                 console.log(metaData);
@@ -53,7 +63,7 @@ function optionChanged(updateID){
         // using updategraph function when there is a change on the dropdown list
         for (let i = 0; i < data.samples.length; i++) {
             // searching the selected dataset (from samples)
-            if (updateID == data.samples[i].id){
+            if (ID == data.samples[i].id){
                 // storing dataset using map function
                 dataset = data.samples[i];
 
@@ -80,7 +90,7 @@ function optionChanged(updateID){
         let topTen = sortedOtu.slice(0,10).reverse();
 
         // drawing bar chart
-        var barTrace = {
+        var barTrace = [{
             x: topTen.map(sampleValue => sampleValue.sample_values),
             y: topTen.map(otu => otu.otu_ids), 
             text: topTen.map(label => label.otu_labels), // for hover text
@@ -91,21 +101,21 @@ function optionChanged(updateID){
                 line: {
                     width: 1.5,
                     color: "rgb(55, 116, 145)"} // line colour and width
-            }, // colour
+            },
             orientation: "h" // change vertical to horizontial
-        };
+        }];
 
         var barLayout = {
             showlegend: false,
             height: 650,
             width: 500
-        }
+        };
 
         // plot bar chart
-        Plotly.newPlot("bar", [barTrace], barLayout);
+        Plotly.newPlot("bar", barTrace, barLayout);
         
         // drawing bubble chart
-        var bubbleTrace = {
+        var bubbleTrace = [{
             x: bubbleDataset.map(otu => otu.otu_ids),
             y: bubbleDataset.map(sampleValue => sampleValue.sample_values),
             text: bubbleDataset.map(label => label.otu_labels), // hover text
@@ -115,7 +125,7 @@ function optionChanged(updateID){
                 color: bubbleDataset.map(otu => otu.otu_ids), // bubble colour
                 size: bubbleDataset.map(sampleValue => sampleValue.sample_values) //bubble size
             }
-        };
+        }];
 
         var bubbleLayout ={
             showlegend: false,
@@ -123,8 +133,8 @@ function optionChanged(updateID){
             height: 600,
             width: 1200
         };
-      // plot bubble chart
-        Plotly.newPlot("bubble", [bubbleTrace], bubbleLayout);
+        // plot bubble chart
+        Plotly.newPlot("bubble", bubbleTrace, bubbleLayout);
 
 
         // drawing gauge chart
@@ -190,9 +200,4 @@ function optionChanged(updateID){
         // plot the gauge chart
         Plotly.newPlot("gauge", gaugeData, gaugeLayout);
     });
-};
-
-        
-
-
-
+}
