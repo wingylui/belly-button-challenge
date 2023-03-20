@@ -25,10 +25,13 @@ function optionChanged(updateID){
                 break;
             }
         }
+        // remove the dsiplaying information before updating new info
         d3.selectAll(".no-bullets").selectAll("li").remove();
 
+        // metaData information will be display in the ul list (class = no-bullets)
         let demographicInfo = d3.select(".no-bullets");
-   
+
+        // putting all the info into different variable and then adding into the ul list
         var id = "id: " + metaData.id;
         var ethnicity = "ethnicity: " + metaData.ethnicity;
         var gender = "gender: " + metaData.gender;
@@ -79,7 +82,7 @@ function optionChanged(updateID){
         // drawing bar chart
         var barTrace = {
             x: topTen.map(sampleValue => sampleValue.sample_values),
-            y: topTen.map(otu => otu.otu_ids), // 
+            y: topTen.map(otu => otu.otu_ids), 
             text: topTen.map(label => label.otu_labels), // for hover text
             type: "bar",
             marker: {
@@ -98,7 +101,7 @@ function optionChanged(updateID){
             width: 500
         }
 
-
+        // plot bar chart
         Plotly.newPlot("bar", [barTrace], barLayout);
         
         // drawing bubble chart
@@ -120,19 +123,20 @@ function optionChanged(updateID){
             height: 600,
             width: 1200
         };
-
+      // plot bubble chart
         Plotly.newPlot("bubble", [bubbleTrace], bubbleLayout);
 
 
         // drawing gauge chart
         var gaugeData = [
             {
-                type: "indicator",
+                type: "indicator", 
                 mode: "gauge+number",
                 title: {text: "scrubs per week"},
                 gauge:{
                     axis: {range: [0, 9]},
-                    bar: {color: "rgb(46, 74, 90)"},
+                    bar: {color: "rgb(46, 74, 90)"}, // change bar colour
+                    // seperate 0 to 9 into 9 sections
                     steps: [
                         {range: [0, 1], color: "rgb(203, 236, 235)"},
                         {range: [1, 2], color: "rgb(180, 219, 220)"},
@@ -146,26 +150,28 @@ function optionChanged(updateID){
                     ],
 
                 },
-                domain: {x: [0,2], y:[0,3]},
-                value: metaData.wfreq   
+                value: metaData.wfreq // display the value
             }
         ];
 
+        // arrow angle calculation 
         var value = metaData.wfreq / 9 * 180;
         var r = 0.5;
         var degree = 180 - value;
         var x_head = r * Math.cos(Math.PI/180*degree);
         var y_head = r * Math.sin(Math.PI/180*degree);
 
+
         let gaugeLayout = {
             title: {
-                text: "<b>Belly Button Washing Frequency</b>",
+                text: "<b>Belly Button Washing Frequency</b>", // bold title
                 font: {size: 25}
             },
             xaxis: {range: [0, 1], showgrid: false, 'zeroline': false, 'visible': false},
             yaxis: {range: [0, 1], showgrid: false, 'zeroline': false, 'visible': false},
             showlegend: false,
             annotations: [{
+                // locating the arrow into right position
                 ax: 0.5,
                 ay: 0.23,
                 axref: 'x',
@@ -174,20 +180,17 @@ function optionChanged(updateID){
                 y: 0.23 + y_head,
                 xref: 'x',
                 yref: 'y',
+                // arrow colour and size and display arrow
                 showarrow: true,
                 arrowhead: 9,
                 arrowsize: 1.5,
                 arrowcolor: "rgb(6, 60, 91)"
-        }]
+            }]
         };
-
+        // plot the gauge chart
         Plotly.newPlot("gauge", gaugeData, gaugeLayout);
-
-        
-
-    })
-
-}
+    });
+};
 
         
 
