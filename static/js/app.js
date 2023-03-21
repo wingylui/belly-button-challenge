@@ -166,7 +166,7 @@ function dataAndrestyle(ID){
 
         // arrow angle calculation 
         var value = metaData.wfreq / 9 * 180;
-        var r = 0.5;
+        var r = 0.4;
         var degree = 180 - value;
         var x_head = r * Math.cos(Math.PI/180*degree);
         var y_head = r * Math.sin(Math.PI/180*degree);
